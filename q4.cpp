@@ -21,19 +21,36 @@ int ed(const std::string &a, const std::string &b)
     {
         d[i][0] = i * cost[2];
     }
-    for (int i = 1; i <= m; ++i)
+    for (int i = 1; i <= std::min(m, n); ++i)
     {
+        int j;
+        for (j = i; j <= m; ++j)
+        {
+            int ii = j, jj = i;
+            int i = ii, j = jj;
+            std::vector<int> dd;
+            dd.reserve(5);
+            if (a[i - 1] == b[j - 1])
+                dd.emplace_back(cost[0] + d[i - 1][j - 1]);
+            if (a[i - 1] != b[j - 1])
+                dd.emplace_back(cost[1] + d[i - 1][j - 1]);
+            dd.emplace_back(cost[2] + d[i - 1][j]);
+            dd.emplace_back(cost[3] + d[i][j - 1]);
+            if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1])
+                dd.emplace_back(cost[4] + d[i - 2][j - 2]);
+            d[i][j] = *std::min_element(dd.begin(), dd.end());
+        }
         for (int j = 1; j <= n; ++j)
         {
             std::vector<int> dd;
             dd.reserve(5);
-            if (a[i] == b[j])
+            if (a[i - 1] == b[j - 1])
                 dd.emplace_back(cost[0] + d[i - 1][j - 1]);
-            if (a[i] != b[j])
+            if (a[i - 1] != b[j - 1])
                 dd.emplace_back(cost[1] + d[i - 1][j - 1]);
             dd.emplace_back(cost[2] + d[i - 1][j]);
             dd.emplace_back(cost[3] + d[i][j - 1]);
-            if (i > 1 && j > 1 && a[i] == b[j - 1] && a[i - 1] == b[j - 1])
+            if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1])
                 dd.emplace_back(cost[4] + d[i - 2][j - 2]);
             d[i][j] = *std::min_element(dd.begin(), dd.end());
         }
